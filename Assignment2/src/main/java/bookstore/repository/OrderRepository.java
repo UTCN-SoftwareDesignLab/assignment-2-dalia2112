@@ -1,9 +1,9 @@
 package bookstore.repository;
 
-import bookstore.model.Order;
+import bookstore.model.OrderBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderRepository extends JpaRepository<Order, Long> {
-    Order findById(long id);
+public interface OrderRepository extends JpaRepository<OrderBook, Long> {
+    OrderBook findById(long id);
 }
 

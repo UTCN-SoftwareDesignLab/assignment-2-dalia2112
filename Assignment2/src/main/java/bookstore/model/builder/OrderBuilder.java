@@ -1,32 +1,32 @@
 package bookstore.model.builder;
 
 import bookstore.model.Book;
-import bookstore.model.Order;
+import bookstore.model.OrderBook;
 
 public class OrderBuilder {
 
-    private Order order;
+    private OrderBook orderBook;
 
     public OrderBuilder() {
-        order = new Order();
+        orderBook = new OrderBook();
     }
 
     public OrderBuilder setId(long id) {
-        order.setId(id);
+        orderBook.setId(id);
         return this;
     }
 
-    public OrderBuilder setBook(Book book) {
-        order.setBook(book);
-        return this;
-    }
+//    public OrderBuilder setBook(Book book) {
+//        orderBook.setBook(book);
+//        return this;
+//    }
 
     public OrderBuilder setQuantity(int quantity) {
-        order.setQuantity(quantity);
+        orderBook.setQuantity(quantity);
         return this;
     }
 
-    public Order build() {
-        return order;
+    public OrderBook build() {
+        return orderBook;
     }
 }

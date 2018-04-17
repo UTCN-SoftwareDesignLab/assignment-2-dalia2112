@@ -1,6 +1,5 @@
 package bookstore.repository;
 
-import bookstore.model.Order;
 import bookstore.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
