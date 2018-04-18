@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>FUCK</title>
+    <meta charset="UTF-8"/>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <style>
+        form {
+            margin-top: 150px;
+        }
+    </style>
 </head>
 <body>
-
+<form:form method = "GET" action = "/HelloWeb/redirect">
+    <table>
+        <tr>
+            <td>
+                <input type = "submit" value = "Redirect Page"/>
+            </td>
+        </tr>
+    </table>
+</form:form>
 </body>
 </html>

@@ -1,20 +1,10 @@
 package try2.controller;
 
-import try2.model.User;
-import try2.model.builder.BookBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import try2.model.builder.UserBuilder;
 import try2.model.validation.Notification;
-import try2.service.book.BookService;
-import try2.model.Book;
 import try2.service.user.UserService;
-
-import javax.jws.soap.SOAPBinding;
-import javax.swing.*;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -38,8 +28,10 @@ public class UserController {
     public @ResponseBody
     String addNewUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
         System.out.println("ADD NEW USER");
-        userService.registerUser(username, password, role);
-        return "register";
+        if(!userService.registerUser(username, password, role).getResult()){
+            return "redirect:/register";
+        }
+        return "register successful";
     }
 
     //LOGIN
@@ -51,6 +43,7 @@ public class UserController {
     }
 
 
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody
     String loginUser(@RequestParam String username, @RequestParam String password) {
@@ -59,10 +52,11 @@ public class UserController {
         if (!loginNotification.getResult()) {
             if (loginNotification.hasErrors()) {
                 System.out.println(loginNotification.getFormattedErrors());
-                return "login failed";
+//                return "redirect:/login";
+                return "redirect:/book";
             }
         }
-        return "login";
+        return "login successful";
 
     }
 //    //READ

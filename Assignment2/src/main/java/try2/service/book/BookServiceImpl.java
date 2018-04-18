@@ -31,7 +31,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(long id){
+    public void update(long id, String name, String author, String genre, int quantity, int price) {
+        Book book = (Book)bookRepository.findById(id);
+        book.setTitle(name);
+        book.setAuthor(author);
+        book.setGenre(genre);
+        book.setQuantity(quantity);
+        book.setPrice(price);
+        bookRepository.save(book);
+    }
+
+    @Override
+    public void deleteBook(long id) {
         bookRepository.deleteById(id);
     }
 

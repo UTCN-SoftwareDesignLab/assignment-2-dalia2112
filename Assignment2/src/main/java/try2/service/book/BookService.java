@@ -9,5 +9,7 @@ public interface BookService {
 
     List<Book> findall();
 
+    void update(long id,String name,String author,String genre,int quantity,int price);
+
     void deleteBook(long id);
 }
