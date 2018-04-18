@@ -1,14 +1,13 @@
 package try2.service.user;
 
-import bookstore.model.User;
-import bookstore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import try2.model.Book;
+import try2.model.User;
+import try2.repository.UserRepository;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;

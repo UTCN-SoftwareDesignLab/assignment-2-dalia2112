@@ -1,6 +1,6 @@
 package try2.model.builder;
 
-import bookstore.model.OrderBook;
+import try2.model.OrderBook;
 
 public class OrderBuilder {
 

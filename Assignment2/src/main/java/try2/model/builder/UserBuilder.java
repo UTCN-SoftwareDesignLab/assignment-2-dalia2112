@@ -1,6 +1,6 @@
 package try2.model.builder;
 
-import bookstore.model.User;
+import try2.model.User;
 
 public class UserBuilder {
 
