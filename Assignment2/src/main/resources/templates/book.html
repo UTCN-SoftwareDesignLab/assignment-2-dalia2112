@@ -4,9 +4,11 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Create Book</title>
+    <title>Books</title>
+
 </head>
 <body>
+<center><h1 style="font-size:60px;">Books</h1></center>
 <div class="container">
     <form th:action="@{/book}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
         <div class="form-group">
@@ -15,6 +17,7 @@
                 <input type="text" name="title" id="title" class="form-control"/>
             </div>
         </div>
+
         <div class="form-group">
             <label for="author" class="col-sm-4 control-label">Author:</label>
             <div class="col-sm-8">
@@ -43,7 +46,7 @@
         </div>
 
 
-        <input type="submit" class="button" name="add" value="Add Book" />
+        <input type="submit" class="button" name="add" value="Add Book"/>
 
         <div class="form-group">
             <label for="id" class="col-sm-4 control-label">ID for update</label>
@@ -52,10 +55,7 @@
             </div>
         </div>
 
-        <input type="submit" class="button" name="update" value="Update Book" />
-
-
-
+        <input type="submit" class="button" name="update" value="Update Book"/>
 
 
         <!-- ALERTS -->
@@ -74,14 +74,49 @@
                 <input type="text" name="BookID" id="BookID" class="form-control"/>
             </div>
         </div>
-        <input type="submit" class="button" name="delete" value="Delete" />
+        <input type="submit" class="button" name="delete" value="Delete"/>
         <span th:text="${deleteMessage}"/>
 
+    </form>
+
+
+    <form th:action="@{/logout}" method="get">
+        <input type="submit" class="button" name="logout" value="Logout"/>
     </form>
 </div>
 
 <div th:if="${param.success}">
     Author created successfully!
 </div>
+
+<form th:action="@{/bookView}" method="get">
+    <input type="submit" class="button" name="viewBooks" value="View Books" />
+</form>
+
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.genre}"></td>
+        <td th:text="${book.price}"></td>
+        <td th:text="${book.quantity}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
 </body>
 </html>

@@ -53,12 +53,12 @@ public class AdminController {
     }
 
 //    //READ
-//    @GetMapping("/book")
-//    public String findAll(Model model) {
-//        final List<Book> items = bookService.findall();
-//        model.addAttribute("itemsCount", items.size());
-//        return "home";
-//    }
+    @RequestMapping(value = "/bookView",params = "viewBooks",method = RequestMethod.GET)
+    public String findAll(Model model) {
+        final List<Book> items = bookService.findall();
+        model.addAttribute("books", items);
+        return "book";
+    }
 
 //    //UPDATE
     @RequestMapping(value = "/book",params = "update",method = RequestMethod.POST)
@@ -90,5 +90,10 @@ public class AdminController {
         model.addAttribute("deleteMessage","book "+id+" deleted");
 
         return "book";
+    }
+
+    @RequestMapping(value = "/logout",params = "logout",method = RequestMethod.GET)
+    public String logout() {
+        return "redirect:/login";
     }
 }
