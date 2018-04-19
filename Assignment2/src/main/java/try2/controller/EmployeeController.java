@@ -97,4 +97,11 @@ public class EmployeeController {
         }
         return "employeeOp";
     }
+
+    @RequestMapping(value = "/orderView", params = "viewOrders", method = RequestMethod.GET)
+    public String findAll(Model model) {
+        final List<OrderBook> items = orderBookService.findall();
+        model.addAttribute("orders", items);
+        return "employeeOp";
+    }
 }

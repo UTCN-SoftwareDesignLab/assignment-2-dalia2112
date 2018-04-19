@@ -63,4 +63,11 @@ public class Book {
     public void setPrice(int price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+
+        String result="";
+        return "ID "+this.getId()+" Title "+this.getTitle()+" Author "+this.getAuthor()+" Genre "+this.getGenre()+" Quantity: "+this.getQuantity()+" Price "+this.getPrice();
+    }
 }

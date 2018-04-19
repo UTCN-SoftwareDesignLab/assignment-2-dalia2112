@@ -11,6 +11,8 @@
 <center><h1 style="font-size:60px;">Books</h1></center>
 <div class="container">
     <form th:action="@{/book}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+        <input type="submit" class="button" name="genReport" value="Generate PDF Report"/>
+        <input type="submit" class="button" name="genReportCSV" value="Generate CSV Report"/>
         <div class="form-group">
             <label for="title" class="col-sm-4 control-label">Title:</label>
             <div class="col-sm-8">

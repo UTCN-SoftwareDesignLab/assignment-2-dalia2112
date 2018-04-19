@@ -63,6 +63,10 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findById(id);
     }
 
+    public List<Book> findByQuantity(int quantity){
+        return bookRepository.findByQuantity(quantity);
+    }
+
 
 
 }

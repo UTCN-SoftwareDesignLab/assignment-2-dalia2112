@@ -8,6 +8,7 @@ public interface BookService {
     void save(Book book);
 
     List<Book> findall();
+
     Book findById(long id);
 
     void update(long id, String name, String author, String genre, int quantity, int price);
@@ -19,4 +20,6 @@ public interface BookService {
     List<Book> findByAuthor(String author);
 
     List<Book> findByGenre(String genre);
+
+    List<Book> findByQuantity(int quantity);
 }

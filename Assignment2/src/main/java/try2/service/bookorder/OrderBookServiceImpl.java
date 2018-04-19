@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import try2.model.OrderBook;
 import try2.repository.OrderBookRepository;
 
+import java.util.List;
+
 @Service
 public class OrderBookServiceImpl implements OrderBookService {
 
@@ -19,5 +21,9 @@ public class OrderBookServiceImpl implements OrderBookService {
     @Override
     public void save(OrderBook orderBook){
         orderBookRepository.save(orderBook);
+    }
+
+    public List<OrderBook> findall(){
+        return orderBookRepository.findAll();
     }
 }

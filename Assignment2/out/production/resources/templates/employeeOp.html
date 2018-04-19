@@ -11,7 +11,7 @@
 <center><h1 style="font-size:60px;">Books</h1></center>
 <div class="container">
     <form th:action="@{/employeeOp}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
-        <h1>Find books</h1>
+        <h3>Find books</h3>
         <div class="form-group">
             <label for="title" class="col-sm-4 control-label">Title:</label>
             <div class="col-sm-8">
@@ -39,7 +39,7 @@
 
 
 
-        <h1>Process orders</h1>
+        <h3>Process orders</h3>
         <div class="form-group">
             <label for="bookId" class="col-sm-4 control-label">Book Id:</label>
             <div class="col-sm-8">
@@ -84,7 +84,12 @@
     Author created successfully!
 </div>
 
+<form th:action="@{/orderView}" method="get">
+    <input type="submit" class="button" name="viewOrders" value="View Orders"/>
+</form>
 
+
+<h3>Books Table</h3>
 
 <table border="1">
     <thead>
@@ -109,6 +114,28 @@
     </tbody>
 </table>
 
+
+<h1>Orders Table</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>BookId</th>
+        <th>BookTitle</th>
+        <th>BookQuantity</th>
+        <th>Quantity</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.book.id}"></td>
+        <td th:text="${order.book.title}"></td>
+        <td th:text="${order.book.quantity}"></td>
+        <td th:text="${order.quantity}"></td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>
