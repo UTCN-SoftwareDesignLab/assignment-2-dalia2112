@@ -9,6 +9,7 @@
 </head>
 <body>
 <center><h1 style="font-size:60px;">Books</h1></center>
+<h2><a href="/user">Operations on Users</a><br/></h2>
 <div class="container">
     <form th:action="@{/book}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
         <input type="submit" class="button" name="genReport" value="Generate PDF Report"/>
@@ -48,7 +49,7 @@
         </div>
 
 
-        <input type="submit" class="button" name="add" value="Add Book"/>
+       <pre> <input type="submit" class="button" name="add" value="Add Book" style="width:80px;height:30px;"/></pre>
 
         <div class="form-group">
             <label for="id" class="col-sm-4 control-label">ID for update</label>
@@ -57,7 +58,7 @@
             </div>
         </div>
 
-        <input type="submit" class="button" name="update" value="Update Book"/>
+        <pre><input type="submit" class="button" name="update" value="Update Book" style="width:80px;height:30px;"/></pre>
 
 
         <!-- ALERTS -->
@@ -76,14 +77,14 @@
                 <input type="text" name="BookID" id="BookID" class="form-control"/>
             </div>
         </div>
-        <input type="submit" class="button" name="delete" value="Delete"/>
+        <pre><input type="submit" class="button" name="delete" value="Delete" style="width:80px;height:30px;"/></pre>
         <span th:text="${deleteMessage}"/>
 
     </form>
 
 
     <form th:action="@{/logout}" method="get">
-        <input type="submit" class="button" name="logout" value="Logout"/>
+        <input type="submit" class="button" name="logout" value="Logout" style="width:80px;height:30px;"/>
     </form>
 </div>
 
@@ -92,7 +93,7 @@
 </div>
 
 <form th:action="@{/bookView}" method="get">
-    <input type="submit" class="button" name="viewBooks" value="View Books"/>
+    <pre><input type="submit" class="button" name="viewBooks" value="View Books" style="width:80px;height:30px;"/></pre>
 </form>
 
 

@@ -35,34 +35,31 @@ public class EmployeeController {
 
 
     @RequestMapping(value = "/employeeOp", params = "srcTitle", method = RequestMethod.POST)
-    public @ResponseBody
-    String searchByTitle(Model model, @RequestParam String title) {
+    public String searchByTitle(Model model, @RequestParam String title) {
         List<Book> books = bookService.findByTitle(title);
         if (!books.isEmpty()) {
             model.addAttribute("books", books);
-            System.out.println("Found books");
         }
+
         return "employeeOp";
     }
 
     @RequestMapping(value = "/employeeOp", params = "srcAuthor", method = RequestMethod.POST)
-    public @ResponseBody
-    String searchByAuthor(Model model, @RequestParam String author) {
+    public String searchByAuthor(Model model, @RequestParam String author) {
         List<Book> books = bookService.findByAuthor(author);
         if (!books.isEmpty()) {
             model.addAttribute("books", books);
-            System.out.println("Found books");
         }
         return "employeeOp";
     }
 
     @RequestMapping(value = "/employeeOp", params = "srcGenre", method = RequestMethod.POST)
-    public @ResponseBody
-    String searchByGenre(Model model, @RequestParam String genre) {
+    public String searchByGenre(Model model, @RequestParam String genre) {
+
         List<Book> books = bookService.findByGenre(genre);
+
         if (!books.isEmpty()) {
             model.addAttribute("books", books);
-            System.out.println("Found books");
         }
         return "employeeOp";
     }
@@ -70,8 +67,7 @@ public class EmployeeController {
     /********************PROCESS ORDER BOOK********************/
 
     @RequestMapping(value = "/employeeOp", params = "addOrder", method = RequestMethod.POST)
-    public @ResponseBody
-    String addOrder(Model model, @RequestParam String bookId, @RequestParam String quantity) {
+    public String addOrder(Model model, @RequestParam String bookId, @RequestParam String quantity) {
         long idd=Long.parseLong(bookId);
         int quantityy= Integer.parseInt(quantity);
         Book book=bookService.findById(idd);
@@ -84,8 +80,7 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "/employeeOp", params = "processOrder", method = RequestMethod.POST)
-    public @ResponseBody
-    String processOrder(Model model, @RequestParam String orderId) {
+    public String processOrder(Model model, @RequestParam String orderId) {
         long id=Long.parseLong(orderId);
         OrderBook orderBook=orderBookService.findById(id);
         Book book=orderBook.getBook();

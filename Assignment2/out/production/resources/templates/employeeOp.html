@@ -8,7 +8,7 @@
 
 </head>
 <body>
-<center><h1 style="font-size:60px;">Books</h1></center>
+<center><h1 style="font-size:60px;">Books and Orders</h1></center>
 <div class="container">
     <form th:action="@{/employeeOp}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
         <h3>Find books</h3>
@@ -19,6 +19,14 @@
             </div>
         </div>
         <input type="submit" class="button" name="srcTitle" value="Search by title"/>
+
+
+
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            Invalid username or password.
+        </div>
+
+
 
         <div class="form-group">
             <label for="author" class="col-sm-4 control-label">Author:</label>

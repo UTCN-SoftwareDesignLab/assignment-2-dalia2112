@@ -43,8 +43,7 @@ public class AdminController {
 
     //CREATE
     @RequestMapping(value = "/book", params = "add", method = RequestMethod.POST)
-    public @ResponseBody
-    String addNewBook(@RequestParam String title
+    public String addNewBook(@RequestParam String title
             , @RequestParam String author, @RequestParam String genre, @RequestParam String quantity, @RequestParam String price) {
         BookValidator bookValidator = new BookValidator();
         bookValidator.validatePrice(price);
@@ -95,8 +94,7 @@ public class AdminController {
     //DELETE
 
     @RequestMapping(value = "/delBook", params = "delete", method = RequestMethod.GET)
-    public @ResponseBody
-    String deleteBook(Model model, @RequestParam("BookID") String id) {
+    public String deleteBook(Model model, @RequestParam("BookID") String id) {
 
         long idd = Long.parseLong(id);
         bookService.deleteBook(idd);

@@ -2,7 +2,9 @@ package try2.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import try2.model.User;
 import try2.model.validation.Notification;
 import try2.service.user.UserService;
 
@@ -19,15 +21,14 @@ public class LoginController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String showRegister() {
-        System.out.println("IN GET - REGISTER");
         return "register";
     }
 
-//    //CREATE
+    //    //CREATE
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public @ResponseBody
     String addNewUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
-        if(!userService.registerUser(username, password, role).getResult()){
+        if (!userService.registerUser(username, password, role).getResult()) {
             return "redirect:/register";
         }
         return "register successful";
@@ -41,42 +42,20 @@ public class LoginController {
     }
 
 
-
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public @ResponseBody
-    String loginUser(@RequestParam String username, @RequestParam String password) {
-        System.out.println("LOGIN USER");
+    public String loginUser(Model model, @RequestParam String username, @RequestParam String password) {
         Notification<Boolean> loginNotification = userService.login(username, password);
         if (!loginNotification.getResult()) {
             if (loginNotification.hasErrors()) {
                 System.out.println(loginNotification.getFormattedErrors());
-//                return "redirect:/login";
-                return "redirect:/book";
+                model.addAttribute("error","NOOOOOO");
+                return "login";
             }
         }
-        return "login successful";
-
+        User user=userService.findByName(username);
+        if(user.getRole().equalsIgnoreCase("admin")){
+            return "redirect:/book";
+        }
+        return "redirect:/employeeOp";
     }
-//    //READ
-//    @GetMapping("/login")
-//    public String findAll(Model model) {
-//        final List<User> items = userService.findall();
-//        model.addAttribute("itemsCount", items.size());
-//        return "login";
-//    }
-
-        //UPDATE
-
-
-        //DELETE
-
-//    @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    public @ResponseBody
-//    String deleteUser(@RequestParam String id) {
-//
-//        long idd=Long.parseLong(id);
-//       userService.deleteUser(idd);
-//
-//        return "login";
-//    }
-    }
+}
