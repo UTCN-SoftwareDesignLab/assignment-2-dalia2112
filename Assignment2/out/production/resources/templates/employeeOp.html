@@ -4,19 +4,21 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Books</title>
+    <title>Employee operations</title>
 
 </head>
 <body>
 <center><h1 style="font-size:60px;">Books</h1></center>
 <div class="container">
-    <form th:action="@{/book}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+    <form th:action="@{/employeeOp}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+        <h1>Find books</h1>
         <div class="form-group">
             <label for="title" class="col-sm-4 control-label">Title:</label>
             <div class="col-sm-8">
                 <input type="text" name="title" id="title" class="form-control"/>
             </div>
         </div>
+        <input type="submit" class="button" name="srcTitle" value="Search by title"/>
 
         <div class="form-group">
             <label for="author" class="col-sm-4 control-label">Author:</label>
@@ -24,6 +26,8 @@
                 <input type="text" name="author" id="author" class="form-control"/>
             </div>
         </div>
+
+        <input type="submit" class="button" name="srcAuthor" value="Search by author"/>
         <div class="form-group">
             <label for="genre" class="col-sm-4 control-label">Genre:</label>
             <div class="col-sm-8">
@@ -31,31 +35,33 @@
             </div>
         </div>
 
+        <input type="submit" class="button" name="srcGenre" value="Search by genre"/>
+
+
+
+        <h1>Process orders</h1>
+        <div class="form-group">
+            <label for="bookId" class="col-sm-4 control-label">Book Id:</label>
+            <div class="col-sm-8">
+                <input type="text" name="bookId" id="bookId" class="form-control"/>
+            </div>
+        </div>
         <div class="form-group">
             <label for="quantity" class="col-sm-4 control-label">Quantity:</label>
             <div class="col-sm-8">
                 <input type="text" name="quantity" id="quantity" class="form-control"/>
             </div>
         </div>
+        <input type="submit" class="button" name="addOrder" value="Add an order"/>
+
 
         <div class="form-group">
-            <label for="price" class="col-sm-4 control-label">Price:</label>
+            <label for="orderId" class="col-sm-4 control-label">OrderId:</label>
             <div class="col-sm-8">
-                <input type="text" name="price" id="price" class="form-control"/>
+                <input type="text" name="orderId" id="orderId" class="form-control"/>
             </div>
         </div>
-
-
-        <input type="submit" class="button" name="add" value="Add Book"/>
-
-        <div class="form-group">
-            <label for="id" class="col-sm-4 control-label">ID for update</label>
-            <div class="col-sm-8">
-                <input type="text" name="id" id="id" class="form-control"/>
-            </div>
-        </div>
-
-        <input type="submit" class="button" name="update" value="Update Book"/>
+        <input type="submit" class="button" name="processOrder" value="Process the order"/>
 
 
         <!-- ALERTS -->
@@ -67,17 +73,6 @@
         </div>
     </form>
 
-    <form th:action="@{/delBook}" method="get">
-        <div class="form-group">
-            <label for="BookID" class="col-sm-4 control-label">ID to delete:</label>
-            <div class="col-sm-8">
-                <input type="text" name="BookID" id="BookID" class="form-control"/>
-            </div>
-        </div>
-        <input type="submit" class="button" name="delete" value="Delete"/>
-        <span th:text="${deleteMessage}"/>
-
-    </form>
 
 
     <form th:action="@{/logout}" method="get">
@@ -89,9 +84,6 @@
     Author created successfully!
 </div>
 
-<form th:action="@{/bookView}" method="get">
-    <input type="submit" class="button" name="viewBooks" value="View Books"/>
-</form>
 
 
 <table border="1">

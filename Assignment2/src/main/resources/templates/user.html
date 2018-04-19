@@ -11,11 +11,11 @@
 <center><h1 style="font-size:60px;">Users</h1></center>
 <div class="container">
     <form th:action="@{/register}" method="get">
-        <input type="submit" class="button" name="reg" value="Add User" />
+        <input type="submit" class="button" name="reg" value="Add Users"/>
     </form>
 
     <form th:action="@{/userView}" method="get">
-        <input type="submit" class="button" name="viewUsers" value="View Users" />
+        <input type="submit" class="button" name="viewUsers" value="View Users"/>
     </form>
 
     <form th:action="@{/user}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
@@ -83,10 +83,6 @@
 <div th:if="${param.success}">
     Author created successfully!
 </div>
-
-
-
-
 
 
 <table border="1">

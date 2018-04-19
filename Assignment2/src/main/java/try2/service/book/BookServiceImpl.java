@@ -32,7 +32,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void update(long id, String name, String author, String genre, int quantity, int price) {
-        Book book = (Book)bookRepository.findById(id);
+        Book book = (Book) bookRepository.findById(id);
         book.setTitle(name);
         book.setAuthor(author);
         book.setGenre(genre);
@@ -45,6 +45,24 @@ public class BookServiceImpl implements BookService {
     public void deleteBook(long id) {
         bookRepository.deleteById(id);
     }
+
+    @Override
+    public List<Book> findByTitle(String title) {
+        return bookRepository.findByTitle(title);
+    }
+
+    public List<Book> findByAuthor(String author) {
+        return bookRepository.findByAuthor(author);
+    }
+
+    public List<Book> findByGenre(String genre) {
+        return bookRepository.findByGenre(genre);
+    }
+
+    public Book findById(long id){
+        return bookRepository.findById(id);
+    }
+
 
 
 }

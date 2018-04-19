@@ -1,5 +1,6 @@
 package try2.model.builder;
 
+import try2.model.Book;
 import try2.model.OrderBook;
 
 public class OrderBuilder {
@@ -15,10 +16,10 @@ public class OrderBuilder {
         return this;
     }
 
-//    public OrderBuilder setBook(Book book) {
-//        orderBook.setBook(book);
-//        return this;
-//    }
+    public OrderBuilder setBook(Book book) {
+        orderBook.setBook(book);
+        return this;
+    }
 
     public OrderBuilder setQuantity(int quantity) {
         orderBook.setQuantity(quantity);

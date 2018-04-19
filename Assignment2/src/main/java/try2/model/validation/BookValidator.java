@@ -42,6 +42,11 @@ public class BookValidator {
             errors.add("This genre does not exist");
     }
 
+    public void validateOrder(int quantity){
+        if(quantity<0)
+            errors.add("Not enough stock!");
+    }
+
     public boolean hasErrors() {
         return !errors.isEmpty();
     }
