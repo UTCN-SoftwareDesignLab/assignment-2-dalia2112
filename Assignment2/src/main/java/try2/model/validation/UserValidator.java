@@ -3,6 +3,7 @@ package try2.model.validation;
 import try2.model.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 public class UserValidator {
     private static final String EMAIL_VALIDATION_REGEX = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     private static final int MIN_PASSWORD_LENGTH = 8;
+    private List<String> ROLES = Arrays.asList("admin", "employee");
 
     private final User user;
 
@@ -26,18 +28,20 @@ public class UserValidator {
         this.user = user;
         errors = new ArrayList<>();
     }
-    public void setUserExists(){
+
+    public void setUserExists() {
         errors.add("User already exists!");
     }
 
     public UserValidator() {
-        user=null;
+        user = null;
         errors = new ArrayList<>();
     }
 
     public boolean validate() {
         validateUsername(user.getName());
         validatePassword(user.getPassword());
+        validateRole(user.getRole());
         return errors.isEmpty();
     }
 
@@ -57,6 +61,11 @@ public class UserValidator {
         if (!containsDigit(password)) {
             errors.add("Password must contain at least one number!");
         }
+    }
+
+    private void validateRole(String role){
+        if(!ROLES.contains(role))
+            errors.add("Invalid Role!");
     }
 
     private boolean containsSpecialCharacter(String s) {
@@ -79,20 +88,16 @@ public class UserValidator {
         return false;
     }
 
-    public boolean validateUpdate(int column, String newValue) {
-        switch (column) {
-            case 0:
-                errors.add("Cannot change id!");
-                break;
-            case 1:
-                return Pattern.compile(EMAIL_VALIDATION_REGEX).matcher(newValue).matches();
-            case 2:
-                validatePassword(newValue);
-                return errors.isEmpty();
+    public boolean validateUpdate(String username, String password, String role) {
 
-        }
-        return false;
-    }
+        validateUsername(username);
+        validatePassword(password);
+        if(!ROLES.contains(role))
+            errors.add("Invalid role!");
+
+        return errors.isEmpty();
+
+}
 
     public String getFormattedErrors() {
         String result = "";

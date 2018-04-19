@@ -10,9 +10,12 @@ import java.util.List;
 public interface UserService {
 
     void save(User user);
-    List<User> findall();
+    List<User> findAll();
     void deleteUser(long id);
     User findByName(String username);
+    User findById(long id);
+//    void updateUser(String username,String password,String role);
     Notification<Boolean> registerUser(String username, String password, String role);
     Notification<Boolean> login(String username, String password);
+    void update(long id,String name, String password, String role);
 }

@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findall() {
+    public List<User> findAll() {
         final Iterable<User> items = userRepository.findAll();
         List<User> result = new ArrayList<>();
         items.forEach(result::add);
@@ -65,14 +65,17 @@ public class UserServiceImpl implements UserService {
 
 
     public Notification<Boolean> registerUser(String username, String password, String role) {
+        System.out.println("FUCK");
         User user = new UserBuilder()
                 .setName(username)
                 .setPassword(password)
                 .setRole(role)
                 .build();
+        System.out.println("In register User");
         UserValidator userValidator = new UserValidator(user);
         if (userRepository.findByName(username) != null) {
             userValidator.setUserExists();
+            System.out.println("Exista");
         }
         boolean userValid = userValidator.validate();
         Notification<Boolean> userRegisterNotification = new Notification<>();
@@ -80,27 +83,40 @@ public class UserServiceImpl implements UserService {
         if (!userValid) {
             userValidator.getErrors().forEach(userRegisterNotification::addError);
             userRegisterNotification.setResult(Boolean.FALSE);
+            System.out.println("No good user");
 
         } else {
             user.setPassword(encodePassword(password));
             userRegisterNotification.setResult(true);
             userRepository.save(user);
         }
+        System.out.println("\n" + userRegisterNotification + "\n");
         return userRegisterNotification;
     }
 
     public Notification<Boolean> login(String username, String password) {
-        User user= userRepository.findByNameAndPassword(username, encodePassword(password));
-        UserValidator userValidator=new UserValidator();
+        User user = userRepository.findByNameAndPassword(username, encodePassword(password));
         Notification<Boolean> userLoginNotification = new Notification<>();
-        if(user==null){
+        if (user == null) {
             userLoginNotification.addError("USER does not exist!");
             userLoginNotification.setResult(Boolean.FALSE);
-        }
-        else{
-             userLoginNotification.setResult(true);
+        } else {
+            userLoginNotification.setResult(true);
         }
         return userLoginNotification;
 
+    }
+
+    @Override
+    public void update(long id,String name, String password, String role) {
+        User user = (User)userRepository.findById(id);
+        user.setName(name);
+        user.setPassword(encodePassword(password));
+        user.setRole(role);
+        userRepository.save(user);
+    }
+
+    public User findById(long id){
+        return userRepository.findById(id);
     }
 }
