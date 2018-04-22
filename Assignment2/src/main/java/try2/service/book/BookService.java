@@ -1,6 +1,8 @@
 package try2.service.book;
 
+import org.aspectj.weaver.ast.Not;
 import try2.model.Book;
+import try2.model.validation.Notification;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ public interface BookService {
 
     Book findById(long id);
 
-    void update(long id, String name, String author, String genre, int quantity, int price);
+    Notification<Boolean> update(long id, String name, String author, String genre, int quantity, int price);
 
     void deleteBook(long id);
 
@@ -22,4 +24,7 @@ public interface BookService {
     List<Book> findByGenre(String genre);
 
     List<Book> findByQuantity(int quantity);
+
+    Notification<Boolean> addBook(Book book);
+
 }

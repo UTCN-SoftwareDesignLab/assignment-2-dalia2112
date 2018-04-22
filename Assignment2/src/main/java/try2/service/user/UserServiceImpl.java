@@ -65,17 +65,14 @@ public class UserServiceImpl implements UserService {
 
 
     public Notification<Boolean> registerUser(String username, String password, String role) {
-        System.out.println("FUCK");
         User user = new UserBuilder()
                 .setName(username)
                 .setPassword(password)
                 .setRole(role)
                 .build();
-        System.out.println("In register User");
         UserValidator userValidator = new UserValidator(user);
         if (userRepository.findByName(username) != null) {
             userValidator.setUserExists();
-            System.out.println("Exista");
         }
         boolean userValid = userValidator.validate();
         Notification<Boolean> userRegisterNotification = new Notification<>();
@@ -83,14 +80,11 @@ public class UserServiceImpl implements UserService {
         if (!userValid) {
             userValidator.getErrors().forEach(userRegisterNotification::addError);
             userRegisterNotification.setResult(Boolean.FALSE);
-            System.out.println("No good user");
-
         } else {
             user.setPassword(encodePassword(password));
             userRegisterNotification.setResult(true);
             userRepository.save(user);
         }
-        System.out.println("\n" + userRegisterNotification + "\n");
         return userRegisterNotification;
     }
 

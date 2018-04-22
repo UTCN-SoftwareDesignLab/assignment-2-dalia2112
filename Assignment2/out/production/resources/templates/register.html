@@ -16,6 +16,7 @@
     </style>
 </head>
 <body>
+<h2><a href="/user">Go back to user operations</a><br/></h2>
 <div class="container">
     <form th:action="@{/register}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
         <div class="form-group">
@@ -44,11 +45,7 @@
         </div>
 
         <!-- ALERTS -->
-        <div th:if="${param.error}" class="alert alert-danger" role="alert">
-            Invalid username or password.
-        </div>
-        <div th:if="${param.logout}" class="alert alert-success" role="alert">
-            You have been logged out.
+        <div th:if="${registerErr}" class="alert alert-danger" role="alert" th:text="${errMsg2}">
         </div>
     </form>
 </div>

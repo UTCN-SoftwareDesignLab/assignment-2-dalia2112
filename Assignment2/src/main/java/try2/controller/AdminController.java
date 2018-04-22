@@ -1,30 +1,19 @@
 package try2.controller;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.hibernate.boot.jaxb.SourceType;
-import sun.util.resources.sv.CurrencyNames_sv;
 import try2.model.User;
-import try2.model.builder.BookBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import try2.model.builder.UserBuilder;
-import try2.model.validation.BookValidator;
+import try2.model.validation.Notification;
 import try2.model.validation.UserValidator;
 import try2.service.book.BookService;
 import try2.model.Book;
+import try2.service.bookorder.OrderBookService;
+import try2.service.report.ReportFactory;
+import try2.service.report.ReportService;
 import try2.service.user.UserService;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -33,6 +22,10 @@ public class AdminController {
     private BookService bookService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private OrderBookService orderBookService;
+    @Autowired
+    private ReportFactory reportFactory;
 
 
     /***************************** BOOK **********************/
@@ -41,30 +34,22 @@ public class AdminController {
         return "book";
     }
 
-    //CREATE
+    //CREATE BOOK
     @RequestMapping(value = "/book", params = "add", method = RequestMethod.POST)
-    public String addNewBook(@RequestParam String title
-            , @RequestParam String author, @RequestParam String genre, @RequestParam String quantity, @RequestParam String price) {
-        BookValidator bookValidator = new BookValidator();
-        bookValidator.validatePrice(price);
-        bookValidator.validateQuantity(quantity);
-        bookValidator.validateGenre(genre);
-        if (!bookValidator.hasErrors()) {
-            int price1 = Integer.parseInt(price);
-            int quantity1 = Integer.parseInt(quantity);
-            Book book = new BookBuilder()
-                    .setTitle(title)
-                    .setAuthor(author)
-                    .setGenre(genre)
-                    .setQuantity(quantity1)
-                    .setPrice(price1)
-                    .build();
-            bookService.save(book);
+    public String addNewBook(Model model, @ModelAttribute Book book1) {
+
+        Notification<Boolean> notification = bookService.addBook(book1);
+        if (notification.hasErrors()) {
+            model.addAttribute("addBook", true);
+            model.addAttribute("addBErr", notification.getFormattedErrors());
+        } else {
+            model.addAttribute("addBookS", true);
+            model.addAttribute("addBSucc", "Book created succesfully!");
         }
         return "book";
     }
 
-    //    //READ
+    //READ BOOKS
     @RequestMapping(value = "/bookView", params = "viewBooks", method = RequestMethod.GET)
     public String findAll(Model model) {
         final List<Book> items = bookService.findall();
@@ -72,33 +57,49 @@ public class AdminController {
         return "book";
     }
 
-    //    //UPDATE
+    //UPDATE BOOK
     @RequestMapping(value = "/book", params = "update", method = RequestMethod.POST)
-    public String update(@RequestParam String title, @RequestParam String author, @RequestParam String genre
-            , @RequestParam String price, @RequestParam String quantity, @RequestParam String id) {
+    public String update(Model model, @RequestParam String title, @RequestParam String author, @RequestParam String genre
+            , @RequestParam int price, @RequestParam int quantity, @RequestParam long id) {
 
-        //VALIDATE FIRST
-        BookValidator bookValidator = new BookValidator();
-        bookValidator.validateQuantity(quantity);
-        bookValidator.validatePrice(price);
-        bookValidator.validateGenre(genre);
-        if (!bookValidator.hasErrors()) {
-            long idd = Long.parseLong(id);
-            int quant = Integer.parseInt(quantity);
-            int pricee = Integer.parseInt(price);
-            bookService.update(idd, title, author, genre, quant, pricee);
+
+//        if (!validateNr(id)) {
+//            model.addAttribute("updBook", true);
+//            model.addAttribute("addBErr2", "Id not available");
+//            return "book";
+//        }
+//        long idd = Long.parseLong(id);
+        Notification<Boolean> notification = bookService.update(id, title, author, genre, quantity, price);
+        if (notification.hasErrors()) {
+            model.addAttribute("updBook", true);
+            model.addAttribute("addBErr2", notification.getFormattedErrors());
+        } else {
+            model.addAttribute("updBookS", true);
+            model.addAttribute("addBSucc2", "Book updated succesfully!");
         }
         return "book";
     }
 
-    //DELETE
+    //DELETE BOOK
 
     @RequestMapping(value = "/delBook", params = "delete", method = RequestMethod.GET)
-    public String deleteBook(Model model, @RequestParam("BookID") String id) {
+    public String deleteBook(Model model, @RequestParam("BookID") long id) {
 
-        long idd = Long.parseLong(id);
-        bookService.deleteBook(idd);
-        model.addAttribute("deleteMessage", "book " + id + " deleted");
+//        BookValidator bookValidator = new BookValidator();
+//        if (!validateNr(id)) {
+//            model.addAttribute("delBook", true);
+//            model.addAttribute("delErr", "Id not available");
+//            return "book";
+//        }
+//        long idd = Long.parseLong(id);
+        if (bookService.findById(id) == null) {
+            model.addAttribute("delBook", true);
+            model.addAttribute("delErr", "Book does not exist");
+        } else {
+            bookService.deleteBook(id);
+            model.addAttribute("delBookS", true);
+            model.addAttribute("delBSucc", "Book deleted succesfully!");
+        }
 
         return "book";
     }
@@ -111,17 +112,16 @@ public class AdminController {
         return "user";
     }
 
-    //
     //CREATE USER
     @RequestMapping(value = "/register", params = "reg", method = RequestMethod.POST)
     public @ResponseBody
-    String addNewUser(@RequestParam String username
-            , @RequestParam String password, @RequestParam String role) {
-        System.out.println(username + " " + password + " " + role);
-        if (!userService.registerUser(username, password, role).getResult()) {
-            return "user";
+    String addNewUser(Model model, @ModelAttribute User user) {
+        System.out.println(user.getName() + " " + user.getPassword() + " " + user.getPassword());
+        if (userService.registerUser(user.getName(), user.getPassword(), user.getRole()).hasErrors()) {
+            model.addAttribute("registerErr", true);
+            model.addAttribute("errMsg2", userService.registerUser(user.getName(), user.getPassword(), user.getRole()).getFormattedErrors());
         }
-        return "user";
+        return "register";
     }
 
     //READ/LIST USER
@@ -135,29 +135,53 @@ public class AdminController {
     //
     //UPDATE USER
     @RequestMapping(value = "/user", params = "update", method = RequestMethod.POST)
-    public String updateUser(@RequestParam String id, @RequestParam String username, @RequestParam String password, @RequestParam String role) {
+    public String updateUser(Model model, @RequestParam long id, @RequestParam String username, @RequestParam String password, @RequestParam String role) {
+
+//        if (!validateNr(id)) {
+//            model.addAttribute("updUErr", true);
+//            model.addAttribute("updMessage", "Invalid ID");
+//            return "user";
+//        }
+
+//        long idd = Long.parseLong(id);
+        if (userService.findById(id) == null) {
+            model.addAttribute("updUErr", true);
+            model.addAttribute("updMessage", "User does not exist");
+            return "user";
+        }
 
         UserValidator userValidator = new UserValidator();
-        long idd = Long.parseLong(id);
-        if (userService.findById(idd) != null) {
-            if (userValidator.validateUpdate(username, password, role)) {
-
-                userService.update(idd, username, password, role);
-            }
+        if (userValidator.validateUpdate(username, password, role)) {
+            userService.update(id, username, password, role);
+            model.addAttribute("updUSucc", true);
+            model.addAttribute("updMessage2", "User updated successfully!");
+        } else {
+            model.addAttribute("updUErr", true);
+            model.addAttribute("updMessage", userValidator.getFormattedErrors());
         }
         return "user";
     }
 
+
 //    //DELETE USER
 
     @RequestMapping(value = "/delUser", params = "delete", method = RequestMethod.GET)
-    public @ResponseBody
-    String deleteUser(Model model, @RequestParam("UserID") String id) {
+    public String deleteUser(Model model, @RequestParam("UserID") long id) {
+//        if (!validateNr(id)) {
+//            model.addAttribute("updUErr", true);
+//            model.addAttribute("updMessage", "Invalid ID");
+//            return "user";
+//        }
 
-        long idd = Long.parseLong(id);
-        userService.deleteUser(idd);
-        model.addAttribute("deleteMessage", "user " + id + " deleted");
+//        long idd = Long.parseLong(id);
+        if (userService.findById(id) == null) {
+            model.addAttribute("delUErr", true);
+            model.addAttribute("delMessage", "User does not exist");
+            return "user";
+        }
 
+        model.addAttribute("delSucc", true);
+        userService.deleteUser(id);
         return "user";
     }
 
@@ -170,60 +194,20 @@ public class AdminController {
     /**************REPORTS**************/
 
     @RequestMapping(value = "/book", params = "genReport", method = RequestMethod.POST)
-    public String generateReportPDF() {
-        String fileName = "report.pdf";
-        PDDocument doc = new PDDocument();
-        PDPage page = new PDPage();
-        doc.addPage(page);
-        List<Book> booksOutOfStock = bookService.findByQuantity(0);
-        try (PDPageContentStream content = new PDPageContentStream(doc, page)) {
-            content.beginText();
-            content.setFont(PDType1Font.COURIER, 15);
-            content.setLeading(20f);
-            content.newLineAtOffset(20, 700);
-            content.showText("Books out of stock: ");
-            content.newLine();
-            content.newLine();
-            String result = "";
-            for (Book book : booksOutOfStock) {
-                content.showText(book.toString());
-                content.newLine();
-            }
-            content.showText(result);
-            content.endText();
-            content.close();
-            doc.save(fileName);
-            //doc.close();
-            System.out.println("created in " + System.getProperty("user.dir"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "book";
-    }
+    public String generateReportPDF(Model model,@RequestParam String format) {
 
-    @RequestMapping(value = "/book", params = "genReportCSV", method = RequestMethod.POST)
-    public String generateReportCSV() {
-        String csvFile = "C:/Users/dalia/Desktop/Assignment2/reportCSV.csv";
-        String comma = ",";
-        String newline = "\n";
-        String file_header = "id,title,author";
-        List<Book> booksOutOfStock = bookService.findByQuantity(0);
-        try {
-            FileWriter writer = new FileWriter(csvFile);
-            writer.append(file_header);
-            for (Book book : booksOutOfStock) {
-                writer.append(newline);
-                writer.append(book.getId().toString());
-                writer.append(comma);
-                writer.append(book.getTitle());
-                writer.append(comma);
-                writer.append(book.getAuthor());
-                writer.append(comma);
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        List<Book> books = bookService.findByQuantity(0);
+        if(format.equalsIgnoreCase("pdf") || format.equalsIgnoreCase("csv")) {
+            ReportService reportService = reportFactory.getReport(format);
+            reportService.generateReport(books);
+            model.addAttribute("repSucc", true);
+            model.addAttribute("repSMsc", "Report created successfully!");
         }
+        else{
+            model.addAttribute("repErr", true);
+            model.addAttribute("repEMsg", "Wrong format (PDF or CSV only)!");
+        }
+
         return "book";
     }
 }

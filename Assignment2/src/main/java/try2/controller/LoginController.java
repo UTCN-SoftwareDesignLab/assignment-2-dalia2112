@@ -1,5 +1,6 @@
 package try2.controller;
 
+import org.hibernate.boot.jaxb.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,14 +25,15 @@ public class LoginController {
         return "register";
     }
 
-    //    //CREATE
+        //CREATE
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public @ResponseBody
-    String addNewUser(@RequestParam String username, @RequestParam String password, @RequestParam String role) {
-        if (!userService.registerUser(username, password, role).getResult()) {
-            return "redirect:/register";
+    public String addNewUser(Model model,@RequestParam String username, @RequestParam String password, @RequestParam String role) {
+        System.out.println(username+" "+password+" "+password);
+        if (userService.registerUser(username, password, role).hasErrors()) {
+            model.addAttribute("registerErr",true);
+            model.addAttribute("errMsg2",userService.registerUser(username, password, role).getFormattedErrors());
         }
-        return "register successful";
+        return "register";
     }
 
     //LOGIN
@@ -47,8 +49,8 @@ public class LoginController {
         Notification<Boolean> loginNotification = userService.login(username, password);
         if (!loginNotification.getResult()) {
             if (loginNotification.hasErrors()) {
-                System.out.println(loginNotification.getFormattedErrors());
-                model.addAttribute("error","NOOOOOO");
+                model.addAttribute("loginErr",true);
+                model.addAttribute("errMsg",loginNotification.getFormattedErrors());
                 return "login";
             }
         }

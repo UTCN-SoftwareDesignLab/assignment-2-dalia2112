@@ -39,12 +39,11 @@
             </div>
 
             <!-- ALERTS -->
-            <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                Invalid username or password.
+            <div th:if="${loginErr}" class="alert alert-danger" role="alert" th:text="${errMsg}">
             </div>
-            <div th:if="${param.logout}" class="alert alert-success" role="alert">
-                You have been logged out.
-            </div>
+
+
+
         </form>
     </div>
 </body>

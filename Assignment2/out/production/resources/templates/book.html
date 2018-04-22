@@ -5,6 +5,16 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Books</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <style>
+        form {
+            margin-top: 100px;
+        }
+
+
+    </style>
 
 </head>
 <body>
@@ -12,8 +22,12 @@
 <h2><a href="/user">Operations on Users</a><br/></h2>
 <div class="container">
     <form th:action="@{/book}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
-        <input type="submit" class="button" name="genReport" value="Generate PDF Report"/>
-        <input type="submit" class="button" name="genReportCSV" value="Generate CSV Report"/>
+
+        <input type="submit" class="button" name="genReport" value="Generate Report"/>
+        <input type="text" name="format" id="format" class="form-control"/>
+        <div th:if="${repErr}" class="alert alert-danger" role="alert" th:text="${repEMsg}"></div>
+        <div th:if="${repSucc}" class="alert alert-success" role="alert" th:text="${repSMsc}"></div>
+        <!--<input type="submit" class="button" name="genReportCSV" value="Generate CSV Report"/> -->
         <div class="form-group">
             <label for="title" class="col-sm-4 control-label">Title:</label>
             <div class="col-sm-8">
@@ -37,19 +51,24 @@
         <div class="form-group">
             <label for="quantity" class="col-sm-4 control-label">Quantity:</label>
             <div class="col-sm-8">
-                <input type="text" name="quantity" id="quantity" class="form-control"/>
+                <input type="number" name="quantity" id="quantity" class="form-control"/>
             </div>
         </div>
 
         <div class="form-group">
             <label for="price" class="col-sm-4 control-label">Price:</label>
             <div class="col-sm-8">
-                <input type="text" name="price" id="price" class="form-control"/>
+                <input type="number" name="price" id="price" class="form-control"/>
             </div>
         </div>
 
 
-       <pre> <input type="submit" class="button" name="add" value="Add Book" style="width:80px;height:30px;"/></pre>
+        <pre> <input type="submit" class="button" name="add" value="Add Book" style="width:80px;height:30px;"/></pre>
+
+        <p>
+        <pre><div th:if="${addBook}" class="alert alert-danger" role="alert" th:text="${addBErr}"></div></pre>
+        <pre><div th:if="${addBookS}" class="alert alert-success" role="alert" th:text="${addBSucc}"></div></pre>
+        </p>
 
         <div class="form-group">
             <label for="id" class="col-sm-4 control-label">ID for update</label>
@@ -58,45 +77,34 @@
             </div>
         </div>
 
-        <pre><input type="submit" class="button" name="update" value="Update Book" style="width:80px;height:30px;"/></pre>
+        <pre><input type="submit" class="button" name="update" value="Update Book"
+                    style="width:100px;height:30px;"/></pre>
 
-
-        <!-- ALERTS -->
-        <div th:if="${param.error}" class="alert alert-danger" role="alert">
-            Invalid username or password.
-        </div>
-        <div th:if="${param.logout}" class="alert alert-success" role="alert">
-            You have been logged out.
-        </div>
+        <div th:if="${updBook}" class="alert alert-danger" role="alert" th:text="${addBErr2}"></div>
+        <div th:if="${updBookS}" class="alert alert-success" role="alert" th:text="${addBSucc2}"></div>
     </form>
 
     <form th:action="@{/delBook}" method="get">
         <div class="form-group">
             <label for="BookID" class="col-sm-4 control-label">ID to delete:</label>
             <div class="col-sm-8">
-                <input type="text" name="BookID" id="BookID" class="form-control"/>
+                <input type="number" name="BookID" id="BookID" class="form-control"/>
             </div>
         </div>
-        <pre><input type="submit" class="button" name="delete" value="Delete" style="width:80px;height:30px;"/></pre>
-        <span th:text="${deleteMessage}"/>
-
+        <input type="submit" class="button" name="delete" value="Delete" style="width:80px;height:30px;"/>
+        <div th:if="${delBook}" class="alert alert-danger" role="alert" th:text="${delErr}"> </div>
+        <div th:if="${delBookS}" class="alert alert-success" role="alert" th:text="${delBSucc}"></div>
     </form>
 
+    <form th:action="@{/bookView}" method="get">
+        <input type="submit" class="button" name="viewBooks" value="View Books"
+                    style="width:80px;height:30px;"/>
+    </form>
 
     <form th:action="@{/logout}" method="get">
         <input type="submit" class="button" name="logout" value="Logout" style="width:80px;height:30px;"/>
     </form>
 </div>
-
-<div th:if="${param.success}">
-    Author created successfully!
-</div>
-
-<form th:action="@{/bookView}" method="get">
-    <pre><input type="submit" class="button" name="viewBooks" value="View Books" style="width:80px;height:30px;"/></pre>
-</form>
-
-
 <table border="1">
     <thead>
     <tr>

@@ -102,7 +102,7 @@ public class UserValidator {
     public String getFormattedErrors() {
         String result = "";
         for (String error : getErrors())
-            result += error + "\n";
+            result += error + "\n \n";
         return result;
     }
 }

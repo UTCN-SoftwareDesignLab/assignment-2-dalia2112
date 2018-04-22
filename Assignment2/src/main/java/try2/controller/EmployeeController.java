@@ -1,21 +1,17 @@
 package try2.controller;
 
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import try2.model.Book;
 import try2.model.OrderBook;
 import try2.model.builder.OrderBuilder;
-import try2.model.validation.BookValidator;
 import try2.service.book.BookService;
 import try2.service.bookorder.OrderBookService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -67,28 +63,43 @@ public class EmployeeController {
     /********************PROCESS ORDER BOOK********************/
 
     @RequestMapping(value = "/employeeOp", params = "addOrder", method = RequestMethod.POST)
-    public String addOrder(Model model, @RequestParam String bookId, @RequestParam String quantity) {
-        long idd=Long.parseLong(bookId);
-        int quantityy= Integer.parseInt(quantity);
-        Book book=bookService.findById(idd);
-        OrderBook orderBook=new OrderBuilder()
-                .setBook(book)
-                .setQuantity(quantityy)
-                .build();
-        orderBookService.save(orderBook);
+    public String addOrder(Model model, @RequestParam long bookId, @RequestParam int quantity) {
+        Book book = bookService.findById(bookId);
+        if (book == null) {
+            model.addAttribute("addOErr", true);
+            model.addAttribute("oErrMsg", "Book does not exist!");
+        } else {
+            OrderBook orderBook = new OrderBuilder()
+                    .setBook(book)
+                    .setQuantity(quantity)
+                    .build();
+            orderBookService.save(orderBook);
+            model.addAttribute("addOSucc", true);
+            model.addAttribute("oSuccMsg", "Order created succesfully!");
+        }
         return "employeeOp";
     }
 
     @RequestMapping(value = "/employeeOp", params = "processOrder", method = RequestMethod.POST)
-    public String processOrder(Model model, @RequestParam String orderId) {
-        long id=Long.parseLong(orderId);
-        OrderBook orderBook=orderBookService.findById(id);
-        Book book=orderBook.getBook();
-        BookValidator bookValidator=new BookValidator();
-        int remaining=book.getQuantity()-orderBook.getQuantity();
-        bookValidator.validateOrder(remaining);
-        if(!bookValidator.hasErrors()){
-            bookService.update(book.getId(),book.getTitle(),book.getAuthor(),book.getGenre(),remaining,book.getPrice());
+    public String processOrder(Model model, @RequestParam long orderId) {
+        OrderBook orderBook = orderBookService.findById(orderId);
+        if (orderBook == null) {
+            model.addAttribute("procOErr", true);
+            model.addAttribute("procErrMsg", "Order does not exist!");
+            return "employeeOp";
+        }
+
+        Book book = orderBook.getBook();
+        int remaining = book.getQuantity() - orderBook.getQuantity();
+        if (remaining >= 0) {
+            bookService.update(book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(), remaining, book.getPrice());
+            orderBookService.deleteOrder(orderId);
+            model.addAttribute("procOSucc", true);
+            model.addAttribute("procSuccMsg", "Order processed succesfully!");
+
+        } else {
+            model.addAttribute("procOErr", true);
+            model.addAttribute("procErrMsg", "Not enough books!");
         }
         return "employeeOp";
     }
