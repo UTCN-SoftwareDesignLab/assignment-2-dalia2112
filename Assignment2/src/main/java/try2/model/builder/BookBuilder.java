@@ -35,6 +35,11 @@ public class BookBuilder {
         return this;
     }
 
+    public BookBuilder setId(long id) {
+        book.setId(id);
+        return this;
+    }
+
 
     public Book build() {
         return book;

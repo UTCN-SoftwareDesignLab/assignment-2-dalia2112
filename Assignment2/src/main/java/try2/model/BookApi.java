@@ -1,6 +1,7 @@
 package try2.model;
 
 public class BookApi {
+    private long id;
     private String title;
     private String author;
     private String category;
@@ -36,5 +37,13 @@ public class BookApi {
 
     public double getRating() {
         return rating;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

@@ -9,23 +9,26 @@ import com.google.api.services.books.BooksRequestInitializer;
 import com.google.api.services.books.model.Volumes;
 import com.google.api.services.books.model.Volume;
 import org.springframework.stereotype.Service;
+import try2.model.Book;
+import try2.model.builder.BookBuilder;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class BookApiServiceImpl implements BookApiService{
+public class BookApiServiceImpl implements BookApiService {
 
-    public List<Volume> apiSearchBookByTitle(String title){
-        final String API_KEY="AIzaSyDV8HWT1kQ4WTW5vmtKtGVv1DgNUTAfrkU";
-        JsonFactory jsonFactory =  new JacksonFactory();
+    public List<Volume> apiSearchBookByTitle(String title) {
+        final String API_KEY = "AIzaSyDV8HWT1kQ4WTW5vmtKtGVv1DgNUTAfrkU";
+        JsonFactory jsonFactory = new JacksonFactory();
         try {
             final Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), jsonFactory, null)
                     .setApplicationName("dalApp/1.0")
                     .setGoogleClientRequestInitializer(new BooksRequestInitializer(API_KEY))
                     .build();
-            Volumes volumes=books.volumes().list(title).setFilter("ebooks").execute();
+            Volumes volumes = books.volumes().list(title).setFilter("ebooks").execute();
             return volumes.getItems();
 
         } catch (GeneralSecurityException e) {
@@ -35,4 +38,33 @@ public class BookApiServiceImpl implements BookApiService{
         }
         return null;
     }
+
+    public List<Book> apiBookByTitle(String title) {
+        List<Volume> volumes = apiSearchBookByTitle(title);
+        List<Book> bookApis = new ArrayList<>();
+        long id = 0;
+        for (Volume volume : volumes) {
+            try {
+                Volume.VolumeInfo info = volume.getVolumeInfo();
+                double price = volume.getSaleInfo().getListPrice().getAmount();
+                int pricee = (int) price;
+                Book bookApi = new BookBuilder()
+                        .setId(id)
+                        .setTitle(info.getTitle())
+                        .setAuthor(info.getAuthors().get(0))
+                        .setGenre(info.getCategories().get(0))
+                        .setQuantity(1)
+                        .setPrice(pricee)
+                        .build();
+                bookApis.add(bookApi);
+                id++;
+            } catch (Exception e) {
+//                model.addAttribute("srcErr", true);
+//                model.addAttribute("srcEMsg", "No book found!");
+            }
+        }
+        return bookApis;
+    }
+
+
 }

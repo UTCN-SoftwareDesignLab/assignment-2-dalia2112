@@ -12,13 +12,6 @@
         form {
             margin-top: 100px;
         }
-
-
-
-
-
-
-
     </style>
 
 </head>
@@ -40,15 +33,25 @@
 
         <pre><div th:if="${srcErr}" class="alert alert-danger" role="alert" th:text="${srcEMsg}"></div></pre>
 
-    </form>
 
+        <div class="form-group">
+            <label for="id" class="col-sm-4 control-label">ID:</label>
+            <div class="col-sm-8">
+                <input type="number" name="id" id="id" class="form-control"/>
+            </div>
+        </div>
 
-    <form th:action="@{/apiView}" method="get">
-        <input type="submit" class="button" name="viewApi" value="View Books"
+        <input type="submit" class="button" name="addApi" value="Add Book from Api to Database"
                style="width:80px;height:30px;"/>
+        <div th:if="${apiadd}" class="alert alert-danger" role="alert" th:text="${apiMsg}"></div>
+        <div th:if="${apiaddS}" class="alert alert-success" role="alert" th:text="${apiMsg2}"></div>
+
+
+
     </form>
-    <div th:if="${apiVw}" class="alert alert-info" role="alert" th:text="${apiMsg}">
-    </div>
+
+
+
 
     <form th:action="@{/logout}" method="get">
         <input type="submit" class="button" name="logout" value="Logout" style="width:80px;height:30px;"/>
@@ -58,18 +61,22 @@
 <table border="1">
     <thead>
     <tr>
+        <th>Id</th>
         <th>Title</th>
         <th>Author</th>
         <th>Category</th>
-        <th>Rating</th>
+        <th>Quantity</th>
+        <th>Price</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="book : ${bookApi}">
+        <td th:text="${book.id}"></td>
         <td th:text="${book.title}"></td>
         <td th:text="${book.author}"></td>
-        <td th:text="${book.category}"></td>
-        <td th:text="${book.rating}"></td>
+        <td th:text="${book.genre}"></td>
+        <td th:text="${book.quantity}"></td>
+        <td th:text="${book.price}"></td>
     </tr>
     </tbody>
 </table>

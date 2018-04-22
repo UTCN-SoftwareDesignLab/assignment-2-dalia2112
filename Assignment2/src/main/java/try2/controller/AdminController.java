@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import try2.model.builder.BookBuilder;
 import try2.model.validation.Notification;
 import try2.model.validation.UserValidator;
 import try2.service.book.BookService;
@@ -32,7 +33,6 @@ public class AdminController {
     private ReportFactory reportFactory;
     @Autowired
     private BookApiService bookApiService;
-    private Object object;
 
 
     /***************************** BOOK **********************/
@@ -227,28 +227,26 @@ public class AdminController {
 
     @RequestMapping(value = "/apiBook", params = "srcApi", method = RequestMethod.POST)
     public String searchBookApi(Model model, @RequestParam String title) {
-        System.out.println(title);
-        List<Volume> volumes = bookApiService.apiSearchBookByTitle(title);
 
-        List<BookApi> bookApis = new ArrayList<>();
-        for (Volume volume : volumes) {
-            try {
-                Volume.VolumeInfo info = volume.getVolumeInfo();
-                BookApi bookApi = new BookApi();
-                bookApi.setTitle(info.getTitle());
-                bookApi.setAuthor(info.getAuthors().get(0));
-                bookApi.setCategory(info.getCategories().get(0));
-                bookApi.setRating(info.getAverageRating());
-                bookApis.add(bookApi);
-            }
-            catch (Exception e){
-//                model.addAttribute("srcErr", true);
-//                model.addAttribute("srcEMsg", "No book found!");
-            }
-        }
-        model.addAttribute("bookApi", bookApis);
+        List<Book> books = bookApiService.apiBookByTitle(title);
+        model.addAttribute("bookApi", books);
         return "apiBook";
     }
 
+    @RequestMapping(value = "/apiBook", params = "addApi", method = RequestMethod.POST)
+    public String addBookApi(Model model, @RequestParam String title, @RequestParam int id) {
+
+        Book book = bookApiService.apiBookByTitle(title).get(id);
+        book.setGenre("SF");
+        Notification<Boolean> notification = bookService.addBook(book);
+        if (notification.hasErrors()) {
+            model.addAttribute("apiadd", true);
+            model.addAttribute("apiMsg", notification.getFormattedErrors());
+        } else {
+            model.addAttribute("apiaddS", true);
+            model.addAttribute("apiMsg2", "Book added successfully!");
+        }
+        return "apiBook";
+    }
 
 }

@@ -108,8 +108,4 @@ public class BookServiceImpl implements BookService {
         return notification;
     }
 
-    private boolean validateNr(String nr) {
-        return nr.chars().allMatch(Character::isDigit);
-    }
-
 }
