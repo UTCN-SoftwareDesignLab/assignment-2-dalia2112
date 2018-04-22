@@ -1,5 +1,7 @@
 package try2.controller;
 
+import com.google.api.services.books.model.Volume;
+import try2.model.BookApi;
 import try2.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,11 +11,13 @@ import try2.model.validation.Notification;
 import try2.model.validation.UserValidator;
 import try2.service.book.BookService;
 import try2.model.Book;
+import try2.service.bookApi.BookApiService;
 import try2.service.bookorder.OrderBookService;
 import try2.service.report.ReportFactory;
 import try2.service.report.ReportService;
 import try2.service.user.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -26,6 +30,9 @@ public class AdminController {
     private OrderBookService orderBookService;
     @Autowired
     private ReportFactory reportFactory;
+    @Autowired
+    private BookApiService bookApiService;
+    private Object object;
 
 
     /***************************** BOOK **********************/
@@ -194,20 +201,54 @@ public class AdminController {
     /**************REPORTS**************/
 
     @RequestMapping(value = "/book", params = "genReport", method = RequestMethod.POST)
-    public String generateReportPDF(Model model,@RequestParam String format) {
+    public String generateReportPDF(Model model, @RequestParam String format) {
 
         List<Book> books = bookService.findByQuantity(0);
-        if(format.equalsIgnoreCase("pdf") || format.equalsIgnoreCase("csv")) {
+        if (format.equalsIgnoreCase("pdf") || format.equalsIgnoreCase("csv")) {
             ReportService reportService = reportFactory.getReport(format);
             reportService.generateReport(books);
             model.addAttribute("repSucc", true);
             model.addAttribute("repSMsc", "Report created successfully!");
-        }
-        else{
+        } else {
             model.addAttribute("repErr", true);
             model.addAttribute("repEMsg", "Wrong format (PDF or CSV only)!");
         }
 
         return "book";
     }
+
+
+    /*********GOOGLE BOOK API*********/
+
+    @RequestMapping(value = "/apiBook", method = RequestMethod.GET)
+    public String showApi() {
+        return "apiBook";
+    }
+
+    @RequestMapping(value = "/apiBook", params = "srcApi", method = RequestMethod.POST)
+    public String searchBookApi(Model model, @RequestParam String title) {
+        System.out.println(title);
+        List<Volume> volumes = bookApiService.apiSearchBookByTitle(title);
+
+        List<BookApi> bookApis = new ArrayList<>();
+        for (Volume volume : volumes) {
+            try {
+                Volume.VolumeInfo info = volume.getVolumeInfo();
+                BookApi bookApi = new BookApi();
+                bookApi.setTitle(info.getTitle());
+                bookApi.setAuthor(info.getAuthors().get(0));
+                bookApi.setCategory(info.getCategories().get(0));
+                bookApi.setRating(info.getAverageRating());
+                bookApis.add(bookApi);
+            }
+            catch (Exception e){
+//                model.addAttribute("srcErr", true);
+//                model.addAttribute("srcEMsg", "No book found!");
+            }
+        }
+        model.addAttribute("bookApi", bookApis);
+        return "apiBook";
+    }
+
+
 }

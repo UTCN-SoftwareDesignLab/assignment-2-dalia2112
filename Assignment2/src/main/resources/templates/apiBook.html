@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Books</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <style>
+        form {
+            margin-top: 100px;
+        }
+
+
+
+
+
+
+
+    </style>
+
+</head>
+<body>
+<center><h1 style="font-size:60px;">Google books API</h1></center>
+<h2><a href="/book">Go back to Book CRUD</a><br/></h2>
+<div class="container">
+    <form th:action="@{/apiBook}" method="post" class="form-horizontal col-sm-6 col-sm-offset-3">
+
+        <div class="form-group">
+            <label for="title" class="col-sm-4 control-label">Title:</label>
+            <div class="col-sm-8">
+                <input type="text" name="title" id="title" class="form-control"/>
+            </div>
+        </div>
+
+        <pre> <input type="submit" class="button" name="srcApi" value="Search Book"
+                     style="width:100px;height:30px;"/></pre>
+
+        <pre><div th:if="${srcErr}" class="alert alert-danger" role="alert" th:text="${srcEMsg}"></div></pre>
+
+    </form>
+
+
+    <form th:action="@{/apiView}" method="get">
+        <input type="submit" class="button" name="viewApi" value="View Books"
+               style="width:80px;height:30px;"/>
+    </form>
+    <div th:if="${apiVw}" class="alert alert-info" role="alert" th:text="${apiMsg}">
+    </div>
+
+    <form th:action="@{/logout}" method="get">
+        <input type="submit" class="button" name="logout" value="Logout" style="width:80px;height:30px;"/>
+    </form>
+</div>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th>Rating</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${bookApi}">
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.category}"></td>
+        <td th:text="${book.rating}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>
