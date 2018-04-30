@@ -13,9 +13,10 @@ import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
+    @Autowired
     private BookRepository bookRepository;
 
-    @Autowired
+
     public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
@@ -38,6 +39,7 @@ public class BookServiceImpl implements BookService {
         Notification<Boolean> notification = new Notification<>();
         if(id<0) {
             notification.addError("Id must be positive!");
+            notification.setResult(false);
             return notification;
         }
         Book book = (Book) bookRepository.findById(id);

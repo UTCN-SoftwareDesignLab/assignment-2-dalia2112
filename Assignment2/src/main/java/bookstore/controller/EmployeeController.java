@@ -1,5 +1,6 @@
 package bookstore.controller;
 
+import bookstore.model.validation.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,45 +63,34 @@ public class EmployeeController {
 
     /********************PROCESS ORDER BOOK********************/
 
+
+    //CREATE ORDER
     @RequestMapping(value = "/employeeOp", params = "addOrder", method = RequestMethod.POST)
     public String addOrder(Model model, @RequestParam long bookId, @RequestParam int quantity) {
-        Book book = bookService.findById(bookId);
-        if (book == null) {
+        Notification<Boolean> notification = orderBookService.saveOrder(bookId, quantity);
+        if (notification.hasErrors()) {
             model.addAttribute("addOErr", true);
-            model.addAttribute("oErrMsg", "Book does not exist!");
+            model.addAttribute("oErrMsg", notification.getFormattedErrors());
         } else {
-            OrderBook orderBook = new OrderBuilder()
-                    .setBook(book)
-                    .setQuantity(quantity)
-                    .build();
-            orderBookService.save(orderBook);
             model.addAttribute("addOSucc", true);
             model.addAttribute("oSuccMsg", "Order created succesfully!");
         }
         return "employeeOp";
     }
 
+    //PROCESS ORDER
     @RequestMapping(value = "/employeeOp", params = "processOrder", method = RequestMethod.POST)
     public String processOrder(Model model, @RequestParam long orderId) {
-        OrderBook orderBook = orderBookService.findById(orderId);
-        if (orderBook == null) {
+        Notification<Boolean> notification = orderBookService.processOrder(orderId);
+        if (notification.hasErrors()) {
             model.addAttribute("procOErr", true);
-            model.addAttribute("procErrMsg", "Order does not exist!");
+            model.addAttribute("procErrMsg", notification.getFormattedErrors());
             return "employeeOp";
         }
 
-        Book book = orderBook.getBook();
-        int remaining = book.getQuantity() - orderBook.getQuantity();
-        if (remaining >= 0) {
-            bookService.updateBook(book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(), remaining, book.getPrice());
-            orderBookService.deleteOrder(orderId);
-            model.addAttribute("procOSucc", true);
-            model.addAttribute("procSuccMsg", "Order processed succesfully!");
+        model.addAttribute("procOSucc", true);
+        model.addAttribute("procSuccMsg", "Order processed succesfully!");
 
-        } else {
-            model.addAttribute("procOErr", true);
-            model.addAttribute("procErrMsg", "Not enough books!");
-        }
         return "employeeOp";
     }
 

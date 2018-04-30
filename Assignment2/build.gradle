@@ -40,5 +40,7 @@ dependencies {
     compile 'com.google.apis:google-api-services-books:v1-rev95-1.23.0'
     testCompile 'junit:junit:4.12'
     compile("org.springframework.boot:spring-boot-starter-security")
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    testCompile("org.springframework.security:spring-security-test")
 
 }

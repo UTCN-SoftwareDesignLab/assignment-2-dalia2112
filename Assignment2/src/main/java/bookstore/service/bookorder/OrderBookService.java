@@ -2,16 +2,17 @@ package bookstore.service.bookorder;
 
 import bookstore.model.Book;
 import bookstore.model.OrderBook;
+import bookstore.model.validation.Notification;
 
 import java.util.List;
 
 public interface OrderBookService {
     OrderBook findById(long id);
 
-    void save(OrderBook orderBook);
+    Notification<Boolean> saveOrder(long bookId,int quantity);
 
     List<OrderBook> findall();
 
-   void deleteOrder(long id);
+   Notification<Boolean> processOrder(long id);
 
 }

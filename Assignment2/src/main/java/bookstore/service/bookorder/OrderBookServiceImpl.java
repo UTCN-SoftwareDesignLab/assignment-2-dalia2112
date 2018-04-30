@@ -1,5 +1,9 @@
 package bookstore.service.bookorder;
 
+import bookstore.model.builder.BookBuilder;
+import bookstore.model.builder.OrderBuilder;
+import bookstore.model.validation.Notification;
+import bookstore.repository.BookRepository;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -20,6 +24,12 @@ public class OrderBookServiceImpl implements OrderBookService {
 
     @Autowired
     private OrderBookRepository orderBookRepository;
+    @Autowired
+    private BookRepository bookRepository;
+
+    public OrderBookServiceImpl(OrderBookRepository orderBookRepository) {
+        this.orderBookRepository = orderBookRepository;
+    }
 
     @Override
     public OrderBook findById(long id) {
@@ -27,14 +37,50 @@ public class OrderBookServiceImpl implements OrderBookService {
     }
 
     @Override
-    public void save(OrderBook orderBook) {
+    public Notification<Boolean> saveOrder(long bookId, int quantity) {
+        Notification<Boolean> notification = new Notification<>();
+        Book book = bookRepository.findById(bookId);
+        if (book == null) {
+            notification.addError("Book does not exist");
+            notification.setResult(false);
+        }
+        if (quantity < 0) {
+            notification.addError("Quantity must be a positive integer");
+            notification.setResult(false);
+        }
+        if (notification.hasErrors()) {
+            return notification;
+        }
+        OrderBook orderBook = new OrderBuilder()
+                .setBook(book)
+                .setQuantity(quantity)
+                .build();
         orderBookRepository.save(orderBook);
+        notification.setResult(true);
+        return notification;
     }
 
     public List<OrderBook> findall() {
         return orderBookRepository.findAll();
     }
 
-    public void deleteOrder(long id){ orderBookRepository.deleteById(id);}
+    public Notification<Boolean> processOrder(long id) {
+        Notification<Boolean> notification= new Notification<>();
+        OrderBook orderBook=orderBookRepository.findById(id);
+        if(orderBook==null){
+            notification.addError("Order does not exist!");
+            notification.setResult(false);
+        }
+        if(orderBook.getQuantity()-orderBook.getBook().getQuantity()<0){
+            notification.addError("Not enought stock!");
+            notification.setResult(false);
+        }
+        if(notification.hasErrors()){return notification;}
+        Book oldBook=orderBook.getBook();
+        oldBook.setQuantity(oldBook.getQuantity()-orderBook.getQuantity());
+        orderBookRepository.deleteById(id);
+        notification.setResult(true);
+        return notification;
+    }
 
 }

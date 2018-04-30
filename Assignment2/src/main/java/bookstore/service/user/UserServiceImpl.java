@@ -19,11 +19,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-
-    @Override
-    public void save(User user) {
-        userRepository.save(user);
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
 
     @Override
     public List<User> findAll() {
@@ -127,5 +126,9 @@ public class UserServiceImpl implements UserService {
 
     public User findById(long id) {
         return userRepository.findById(id);
+    }
+
+    public User findByUsername(String username){
+        return userRepository.findByName(username);
     }
 }

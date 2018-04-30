@@ -11,7 +11,6 @@ public class AuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHa
 
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
-        // Get the role of logged in user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String role = auth.getAuthorities().toString();
 

@@ -1,11 +1,13 @@
 package bookstore.controller;
 
+import bookstore.model.validation.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,13 +46,29 @@ public class LoginController implements WebMvcConfigurer {
         return "register";
     }
 
+
     //LOGIN
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(Model model, @RequestParam String username, @RequestParam String password) {
+        Notification<Boolean> notification = userService.login(username, password);
+        if (notification.hasErrors()) {
+            model.addAttribute("loginErr", true);
+            model.addAttribute("errMsg", notification.getFormattedErrors());
+            return "/login";
+        }
+        if (userService.findByUsername(username).getRole().equalsIgnoreCase("admin"))
+            return "redirect:/book";
+        else return "redirect:/employeeOp";
+
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String showUser() {
         return "login";
     }
 
+    //LOGOUT
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
