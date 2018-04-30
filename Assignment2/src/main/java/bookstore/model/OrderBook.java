@@ -8,9 +8,9 @@ public class OrderBook {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-//    @ManyToOne
-//    @JoinColumn(name="book_id")
-//    private Book book;
+        @ManyToOne
+    @JoinColumn(name="book_id")
+    private Book book;
     private int quantity;
 
 
@@ -22,13 +22,13 @@ public class OrderBook {
         this.id = id;
     }
 //
-//    public Book getBook() {
-//        return book;
-//    }
-//
-//    public void setBook(Book book) {
-//        this.book = book;
-//    }
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
 
     public int getQuantity() {
         return quantity;

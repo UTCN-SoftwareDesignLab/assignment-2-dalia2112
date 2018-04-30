@@ -16,10 +16,10 @@ public class OrderBuilder {
         return this;
     }
 
-//    public OrderBuilder setBook(Book book) {
-//        orderBook.setBook(book);
-//        return this;
-//    }
+    public OrderBuilder setBook(Book book) {
+        orderBook.setBook(book);
+        return this;
+    }
 
     public OrderBuilder setQuantity(int quantity) {
         orderBook.setQuantity(quantity);

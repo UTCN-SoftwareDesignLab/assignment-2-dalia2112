@@ -1,17 +1,17 @@
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import try2.model.Book;
-import try2.model.builder.BookBuilder;
-import try2.model.validation.Notification;
-import try2.service.book.BookService;
-import try2.service.book.BookServiceImpl;
+import bookstore.model.Book;
+import bookstore.model.builder.BookBuilder;
+import bookstore.model.validation.Notification;
+import bookstore.service.book.BookService;
+import bookstore.service.book.BookServiceImpl;
 
 import javax.swing.*;
 import java.util.List;
 
 public class BookServiceImplTest {
-    private static BookService target;
+    private static BookService target;          //SPOCK   |    MOCKITO
 
     @BeforeClass
     public static void init(){

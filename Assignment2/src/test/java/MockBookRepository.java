@@ -2,8 +2,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import try2.model.Book;
-import try2.repository.BookRepository;
+import bookstore.model.Book;
+import bookstore.repository.BookRepository;
 
 import java.util.List;
 import java.util.Optional;

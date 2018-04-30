@@ -1,46 +1,35 @@
 package bookstore.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-/**
- * Created by Catalysts on 8/9/2015.
- */
 @Entity
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private long id;
-
-    //    @Column(unique = true)
-    private String isbn;
-    private String name;
-
+    private Long id;
+    private String title;
     private String author;
+    private String genre;
+    private int quantity;
+    private int price;
 
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String name) {
+        this.title = name;
     }
 
     public String getAuthor() {
@@ -51,4 +40,34 @@ public class Book {
         this.author = author;
     }
 
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+
+        String result="";
+        return "ID "+this.getId()+" Title "+this.getTitle()+" Author "+this.getAuthor()+" Genre "+this.getGenre()+" Quantity: "+this.getQuantity()+" Price "+this.getPrice();
+    }
 }
