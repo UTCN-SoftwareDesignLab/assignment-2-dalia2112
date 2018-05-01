@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bookstore.service.user.UserService;
 
@@ -48,23 +49,13 @@ public class LoginController implements WebMvcConfigurer {
 
 
     //LOGIN
-
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(Model model, @RequestParam String username, @RequestParam String password) {
-        Notification<Boolean> notification = userService.login(username, password);
-        if (notification.hasErrors()) {
-            model.addAttribute("loginErr", true);
-            model.addAttribute("errMsg", notification.getFormattedErrors());
-            return "/login";
-        }
-        if (userService.findByUsername(username).getRole().equalsIgnoreCase("admin"))
-            return "redirect:/book";
-        else return "redirect:/employeeOp";
-
-    }
-
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String showUser() {
+    public String showLogin(Model model, HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(true);
+        if (session.getAttribute("errorMessage") != null) {
+            model.addAttribute("loginErr", true);
+            model.addAttribute("errMsg", (String) session.getAttribute("errorMessage"));
+        }
         return "login";
     }
 
